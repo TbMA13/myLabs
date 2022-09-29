@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.15) # Проверка версии CMake.
 
 									 # старее указаной, произайдёт аварийный выход.
 
-set(PROJECT_NAME lab5)				 # имя проекта		 
+set(PROJECT_NAME 4_lab)				 # имя проекта		 
 
 project("${PROJECT_NAME}")
 
@@ -12,6 +12,4 @@ set(CMAKE_CXX_STANDARD 17)			 # устанавливаем 17 стандарт �
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-add_executable("${PROJECT_NAME}" 5_lab.cpp)
-
-file(COPY "5_lab.txt" DESTINATION "/")
+add_executable("${PROJECT_NAME}" 4_lab.cpp)
