@@ -18,13 +18,13 @@ int main() {
 	int change;
 	cout << "Выберите задание (\"1\" или \"2\")?\n>>> ";
 	cin >> change;
-	cout << endl;
+	//cout << endl;
 	if (change == 1) {
 		int punctuationMarks[] = { 33, 34, 39, 40, 41, 44, 45 ,46, 58, 59, 63 };
 		string firstLine;
 		cout << "Введите строку\n>>> ";
 		char line[101];
-		gets_s(line);
+		cin >> line;
 		int N = 0;
 		for (int i = 0; i < 101; i++) {
 			if (line[i] == 0) {
@@ -38,7 +38,7 @@ int main() {
 		string newLine[100];
 		int count = 0;
 		for (int i = 0; i < N; i++) {
-			int currentSymbol = line[i];
+			int currentSymbol = static_cast<int>(line[i]);
 			if (markSearch(punctuationMarks, currentSymbol)) {
 				continue;
 			}
@@ -56,11 +56,12 @@ int main() {
 	}
 	else if (change == 2) {
 		string MyText;
-		fstream fileRead("5_lab.txt");
+		fstream fileRead("5_lab.txt", std::ios::in);
 		while (getline(fileRead, MyText)) {
 			cout << MyText;
 		}
-		/*std::istream file("5_lab.txt");
-		fileRead.close();*/
+		while (!fileRead.eof()) {
+			fileRead.getline(str, 100);
+		}
 	}
 }
