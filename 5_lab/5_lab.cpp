@@ -12,16 +12,28 @@ bool markSearch(int* marks, int currentSymbolCode) {
 	}
 	return false;
 }
+int literCount(string word) {
+	int size = word.length();
+	int litersCount[256] = { 0 };
+	for (int i = 0; i < size; i++) {
+		litersCount[abs((char)word[i])] += 1;
+	}
+	int maxNumber = 0;
+	for (int i = 0; i < 256; i++) {
+		if (litersCount[i] > maxNumber) {
+			maxNumber = litersCount[i];
+		}
+	}
+	return maxNumber;
+}
 
 int main() {
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, "RUS");
 	int change;
 	cout << "Выберите задание (\"1\" или \"2\")?\n>>> ";
 	cin >> change;
-	//cout << endl;
 	if (change == 1) {
 		int punctuationMarks[] = { 33, 34, 39, 40, 41, 44, 45 ,46, 58, 59, 63 };
-		string firstLine;
 		cout << "Введите строку\n>>> ";
 		char line[101];
 		cin >> line;
@@ -55,13 +67,38 @@ int main() {
 		}
 	}
 	else if (change == 2) {
+		string wordsArray[5000] = {};
 		string MyText;
+		int count = 0;
 		fstream fileRead("5_lab.txt", std::ios::in);
-		while (getline(fileRead, MyText)) {
-			cout << MyText;
-		}
 		while (!fileRead.eof()) {
-			fileRead.getline(str, 100);
+			fileRead >> MyText;
+			wordsArray[count] = MyText;
+			count++;
+			//cout << MyText << endl;
+		}
+		int litersInWordsCount[5000] = { 0 };
+		for (int j = 0; j < count; j++) {
+			string currentWord = wordsArray[j];
+			int maxLitersInWord = literCount(currentWord);
+			litersInWordsCount[j] = maxLitersInWord;
+		}
+		int maxCount = 0;
+		for (int i = 0; i < count; i++) {
+			if (maxCount < litersInWordsCount[i]) {
+				maxCount = litersInWordsCount[i];
+			}
+		}
+		for (int i = 0; i < count - 1; i++) {
+			for (int j = 1; j < count; j++) {
+				if (litersInWordsCount[j - 1] < litersInWordsCount[j]) {
+					std::swap(litersInWordsCount[j - 1], litersInWordsCount[j]);
+					std::swap(wordsArray[j - 1], wordsArray[j]);
+				}
+			}
+		}
+		for (int i = 0; i < count; i++) {
+			cout << wordsArray[i] << " " << litersInWordsCount[i] << endl;
 		}
 	}
 }
