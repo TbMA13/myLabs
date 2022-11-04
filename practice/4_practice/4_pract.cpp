@@ -5,21 +5,21 @@ int main() {
 	//std::cout << (int) * (&char2);
 	setlocale(LC_ALL, "RUS");
 	short n;
-	std::cout << "Введите количество чисел\n>>> ";
+	std::cout << "Укажите количество чисел\n>>> ";
 	std::cin >> n;
+	std::cout << std::endl;
+	std::cout << "Введите любые числа из диапазона [0, 8]\nКаждое число на новой строке\n";
 	short currentNumber = 0;
 	short currentNumber2 = 0;
 	unsigned char* numbersMas = new unsigned char[n];
 	short count = -1;
-
-	std::cout << "Введите любые числа из диапазона [0, 8]\nКаждое число на новой строке";
 	
 	while (count != n - 1) {
-		std::cout << "\n>>> ";
+		std::cout << ">>> ";
 		std::cin >> currentNumber;
 		count++;
 		if (count != n - 1) {
-			std::cout << "\n>>> ";
+			std::cout << ">>> ";
 			std::cin >> currentNumber2;
 			count++;
 		}
@@ -37,23 +37,31 @@ int main() {
 		}
 		numbersMas[count % 2 == 0 ? count / 2 : (count - 1) / 2] = decTempValue;
 	}
-
-
-	std::cout << (int) * (numbersMas) << ' ' << (int) * (numbersMas + 1) << ' ' << (int)*(numbersMas + 2);
-
-
-	for (short i = 0; i < (count % 2 == 0 ? count / 2 : (count - 1) / 2); i++) {
-		short tempNumber = 0;
-		short currentNumber = numbersMas[i];
-		short currentNumber1 = currentNumber / 1000;
-		short currentNumber2 = currentNumber % 10000;
-		//todo сделать распаковку
-		/*while (((currentNumber2 / 8) % 2) * pow(10, 3) + ((currentNumber2 / 4) % 2) * pow(10, 2) + ((currentNumber2 / 2) % 2) * 10 + (currentNumber2 % 2) > 0) {
-			decTempValue += (binTempValue % 10) * pow(2, i);
-			currentNumber2 /= 10;
-			i++;
-		}*/
-
+	for (short i = 0; i < (count % 2 == 0 ? count / 2 : (count - 1) / 2) + 1; i++) {
+		short tempNumber1 = 0;
+		short tempNumber2 = 0;
+		short currentNumber = (int)(numbersMas[i]);
+		short currentNumber2 = ((currentNumber / 8) % 2) * pow(10, 3) + ((currentNumber / 4) % 2) * pow(10, 2) + ((currentNumber / 2) % 2) * 10 + (currentNumber % 2);
+		short currentNumber1 = ((currentNumber / 128) % 2) * pow(10, 3) + ((currentNumber / 64) % 2) * pow(10, 2) + ((currentNumber / 32) % 2) * 10 + ((currentNumber / 16) % 2);
+		short j = 0;
+		while (currentNumber1 > 0) {
+			tempNumber1 += (currentNumber1 % 10) * pow(2, j);
+			currentNumber1 /= 10;
+			j++;
+		}
+		std::cout << tempNumber1 << std::endl;
+		if (currentNumber2 == 1111) {
+			return 0;
+		}
+		else {
+			j = 0;
+			while (currentNumber2 > 0) {
+				tempNumber2 += (currentNumber2 % 10) * pow(2, j);
+				currentNumber2 /= 10;
+				j++;
+			}
+			std::cout << tempNumber2 << std::endl;
+		}
 	}
 	return 0;
 }	
