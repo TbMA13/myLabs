@@ -15,6 +15,8 @@ int main() {
 	short count = -1;
 	
 	while (count != n - 1) {
+		short currentNumber = 0;
+		short currentNumber2 = 15;
 		std::cout << ">>> ";
 		std::cin >> currentNumber;
 		count++;
@@ -27,40 +29,22 @@ int main() {
 			currentNumber2 = 15;
 		}
 		int binTempValue = 11111111;
-		binTempValue = ((currentNumber >> 3) % 2) * 10000000 + ((currentNumber >> 2) % 2) * 1000000 + ((currentNumber >> 1) % 2) * 100000 + (currentNumber % 2) * 10000 + ((currentNumber2 >> 3) % 2) * 1000 + ((currentNumber2 >> 2) % 2) * 100 + ((currentNumber2 >> 1) % 2) * 10 + (currentNumber2 % 2);
-		short decTempValue = 0;
-		short i = 0;
-		while (binTempValue > 0) {
-			decTempValue += (binTempValue % 10) << i;
-			binTempValue /= 10;
-			i++;
-		}
+
+		short decTempValue = ((currentNumber >> 3) % 2) << 7 | ((currentNumber >> 2) % 2) << 6 | ((currentNumber >> 1) % 2) << 5 | (currentNumber % 2) << 4 | ((currentNumber2 >> 3) % 2) << 3 | ((currentNumber2 >> 2) % 2) << 2 | ((currentNumber2 >> 1) % 2) << 1 | (currentNumber2 % 2);
 		numbersMas[count % 2 == 0 ? count >> 1 : (count - 1) >> 1] = decTempValue;
 	}
 	for (short i = 0; i < (count % 2 == 0 ? count >> 1 : (count - 1) >> 1) + 1; i++) {
 		short tempNumber1 = 0;
 		short tempNumber2 = 0;
 		short currentNumber = (int)(numbersMas[i]);
-		short currentNumber2 = ((currentNumber >> 3) % 2) * 1000 + ((currentNumber >> 2) % 2) * 100 + ((currentNumber >> 1) % 2) * 10 + (currentNumber % 2);
-		short currentNumber1 = ((currentNumber >> 7) % 2) * 1000 + ((currentNumber >> 6) % 2) * 100 + ((currentNumber >> 5) % 2) * 10 + ((currentNumber >> 4) % 2);
+		short currentNumber2 = ((currentNumber >> 3) % 2) << 3 | ((currentNumber >> 2) % 2) << 2 | ((currentNumber >> 1) % 2) << 1 | (currentNumber % 2);
+		short currentNumber1 = ((currentNumber >> 7) % 2) << 3 | ((currentNumber >> 6) % 2) << 2 | ((currentNumber >> 5) % 2) << 1 | ((currentNumber >> 4) % 2);
 		short j = 0;
-		while (currentNumber1 > 0) {
-			tempNumber1 += (currentNumber1 % 10) << j;
-			currentNumber1 /= 10;
-			j++;
-		}
-		std::cout << tempNumber1 << std::endl;
-		if (currentNumber2 == 1111) {
-			return 0;
-		}
-		else {
-			j = 0;
-			while (currentNumber2 > 0) {
-				tempNumber2 += (currentNumber2 % 10) << j;
-				currentNumber2 /= 10;
-				j++;
-			}
-			std::cout << tempNumber2 << std::endl;
+
+		std::cout << currentNumber1 << std::endl;
+
+		if (currentNumber2 != 15) {
+			std::cout << currentNumber2 << std::endl;
 		}
 	}
 	return 0;
