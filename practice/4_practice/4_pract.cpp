@@ -27,25 +27,25 @@ int main() {
 			currentNumber2 = 15;
 		}
 		int binTempValue = 11111111;
-		binTempValue = ((currentNumber / 8) % 2) * pow(10, 7) + ((currentNumber / 4) % 2) * pow(10, 6) + ((currentNumber / 2) % 2) * pow(10, 5) + (currentNumber % 2) * pow(10, 4) + ((currentNumber2 / 8) % 2) * pow(10, 3) + ((currentNumber2 / 4) % 2) * pow(10, 2) + ((currentNumber2 / 2) % 2) * 10 + (currentNumber2 % 2);
+		binTempValue = ((currentNumber >> 3) % 2) * 10000000 + ((currentNumber >> 2) % 2) * 1000000 + ((currentNumber >> 1) % 2) * 100000 + (currentNumber % 2) * 10000 + ((currentNumber2 >> 3) % 2) * 1000 + ((currentNumber2 >> 2) % 2) * 100 + ((currentNumber2 >> 1) % 2) * 10 + (currentNumber2 % 2);
 		short decTempValue = 0;
 		short i = 0;
 		while (binTempValue > 0) {
-			decTempValue += (binTempValue % 10) * pow(2, i);
+			decTempValue += (binTempValue % 10) << i;
 			binTempValue /= 10;
 			i++;
 		}
-		numbersMas[count % 2 == 0 ? count / 2 : (count - 1) / 2] = decTempValue;
+		numbersMas[count % 2 == 0 ? count >> 1 : (count - 1) >> 1] = decTempValue;
 	}
-	for (short i = 0; i < (count % 2 == 0 ? count / 2 : (count - 1) / 2) + 1; i++) {
+	for (short i = 0; i < (count % 2 == 0 ? count >> 1 : (count - 1) >> 1) + 1; i++) {
 		short tempNumber1 = 0;
 		short tempNumber2 = 0;
 		short currentNumber = (int)(numbersMas[i]);
-		short currentNumber2 = ((currentNumber / 8) % 2) * pow(10, 3) + ((currentNumber / 4) % 2) * pow(10, 2) + ((currentNumber / 2) % 2) * 10 + (currentNumber % 2);
-		short currentNumber1 = ((currentNumber / 128) % 2) * pow(10, 3) + ((currentNumber / 64) % 2) * pow(10, 2) + ((currentNumber / 32) % 2) * 10 + ((currentNumber / 16) % 2);
+		short currentNumber2 = ((currentNumber >> 3) % 2) * 1000 + ((currentNumber >> 2) % 2) * 100 + ((currentNumber >> 1) % 2) * 10 + (currentNumber % 2);
+		short currentNumber1 = ((currentNumber >> 7) % 2) * 1000 + ((currentNumber >> 6) % 2) * 100 + ((currentNumber >> 5) % 2) * 10 + ((currentNumber >> 4) % 2);
 		short j = 0;
 		while (currentNumber1 > 0) {
-			tempNumber1 += (currentNumber1 % 10) * pow(2, j);
+			tempNumber1 += (currentNumber1 % 10) << j;
 			currentNumber1 /= 10;
 			j++;
 		}
@@ -56,7 +56,7 @@ int main() {
 		else {
 			j = 0;
 			while (currentNumber2 > 0) {
-				tempNumber2 += (currentNumber2 % 10) * pow(2, j);
+				tempNumber2 += (currentNumber2 % 10) << j;
 				currentNumber2 /= 10;
 				j++;
 			}
