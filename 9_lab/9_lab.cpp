@@ -9,7 +9,6 @@ public:
 	rectangle(short length, short width) {
 		m_length = length;
 		m_width = width;
-		m_area = length * width;
 		std::cout << "Теперь существует прямоугольник с длиной " << m_length << " и шириной " << m_width << std::endl;
 	}
 	~rectangle() {
@@ -36,7 +35,7 @@ public:
 		std::cout << "Ширина прямоугольника: " << m_width << std::endl;
 	}
 	void getArea() {
-		std::cout << "Площадь прямоугольника равна " << m_area << std::endl;
+		std::cout << "Площадь прямоугольника равна " << m_width * m_length << std::endl;
 	}
 
 };
