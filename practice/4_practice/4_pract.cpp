@@ -29,8 +29,7 @@ int main() {
 			currentNumber2 = 15;
 		}
 		int binTempValue = 11111111;
-
-		short decTempValue = ((currentNumber >> 3) % 2) << 7 | ((currentNumber >> 2) % 2) << 6 | ((currentNumber >> 1) % 2) << 5 | (currentNumber % 2) << 4 | ((currentNumber2 >> 3) % 2) << 3 | ((currentNumber2 >> 2) % 2) << 2 | ((currentNumber2 >> 1) % 2) << 1 | (currentNumber2 % 2);
+		short decTempValue = (currentNumber << 4) | currentNumber2;
 		numbersMas[count % 2 == 0 ? count >> 1 : (count - 1) >> 1] = decTempValue;
 	}
 	for (short i = 0; i < (count % 2 == 0 ? count >> 1 : (count - 1) >> 1) + 1; i++) {
