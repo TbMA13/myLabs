@@ -5,7 +5,6 @@ class dynamicMas {
 private:
 	int m_count = 1;
 	int* m_mas = new int[m_count];
-	int* tempMas = new int[1];
 
 public:
 	dynamicMas(int firstElement) {
@@ -14,6 +13,7 @@ public:
 		std::cout << "Создан массив с единственным элементом " << firstElement << std::endl;
 	}
 	~dynamicMas() {
+		delete[] m_mas;
 		std::cout << "Массив удалён" << std::endl;
 	}
 
