@@ -1,4 +1,12 @@
-#include <iostream>
+#include <SFML/Graphics.hpp>
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(200, 200), "Test");
+    return 0;
+}
+
+/*#include <iostream>
 #include <string>
 using namespace std;
 
@@ -140,4 +148,4 @@ int main() {
 	first(firstArray, arraySize);
 	second(firstArray, arraySize);
 	third();
-}
+}*/

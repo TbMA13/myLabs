@@ -12,4 +12,17 @@ set(CMAKE_CXX_STANDARD 17)			 # устанавливаем 17 стандарт �
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-add_executable("${PROJECT_NAME}" 4_lab.cpp)
+set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR};${CMAKE_MODULE_PATH}")
+
+add_definitions(-DSFML_STATIC)
+
+add_executable("${PROJECT_NAME}" 4_lab.cpp Circle.cpp Circle.h)
+
+find_package(SFML REQUIRED)
+
+if(SFML_FOUND)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${SFML_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
+    message(${SFML_INCLUDE_DIRS})
+    message(${SFML_LIBRARIES})
+endif()
