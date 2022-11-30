@@ -27,7 +27,7 @@ public:
 class Car {
 private:
 	std::vector<Component*> m_components;
-	unsigned short m_componentsCount = 0;
+	//unsigned short m_componentsCount = 0;
 	std::string m_model;
 public:
 	Car(std::string model) {
@@ -36,10 +36,10 @@ public:
 	}
 	void addComponent(Component*currentComponent) {
 		m_components.push_back(currentComponent);
-		m_componentsCount += 1;
+		//m_componentsCount += 1;
 	}
 	void getComponents() {
-		for (unsigned short i = 0; i < m_componentsCount; i++) {
+		for (unsigned short i = 0; i < m_components.size(); i++) {
 			std::cout << m_components[i]->getArticle() << std::endl;
 		}
 	}
