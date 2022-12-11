@@ -1,3 +1,0 @@
-D:/myLabs/project/cmake-build-debug-visual-studio/CMakeFiles/MyProject.dir
-D:/myLabs/project/cmake-build-debug-visual-studio/CMakeFiles/edit_cache.dir
-D:/myLabs/project/cmake-build-debug-visual-studio/CMakeFiles/rebuild_cache.dir

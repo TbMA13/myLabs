@@ -11,6 +11,13 @@ int getRandomNumber(const int minNumber, const int maxNumber) {
     return (rand() % (maxNumber - minNumber + 1) + minNumber);
 }
 
+enum Actions{
+  ADDITION = 0,
+  SUBTRACTION = 1,
+  MULTIPLICATION = 2,
+  DIVISION = 3
+};
+
 class example {
 private:
     int m_actionsCount;
@@ -20,7 +27,6 @@ private:
 
     int *m_numbersMas = nullptr;
     int *m_actions = nullptr;
-    //short* m_brackets = nullptr;
 public:
     example(int actionsCount, int minNumber, int maxNumber, const bool actions[4]) {
         m_actionsCount = actionsCount;
@@ -38,50 +44,49 @@ public:
     }
 
     void generate(const bool actions[4]) {
+        std::cout << "Генерация действий..." << std::endl;
         short count = 0;
-        while (count < m_actionsCount){
-            short temp = getRandomNumber(0, 3);
-            if (actions[temp]) {
-                //TODO  что-то неправильно работает в генерации
-                m_actions[count] = temp;
-                std::cout << m_actions[count] << " " << temp << std::endl;
+        short newTempActionsLen = actions[0] + actions[1] + actions[2] + actions[3];
+        short* newActions = new short[newTempActionsLen];
+        for (short i = 0; i < sizeof(actions); i++){
+            if (actions[i]) {
+                newActions[newTempActionsLen - sizeof(newActions)] = i;
+                newTempActionsLen += 1;
+            }
+        }
+        newTempActionsLen = sizeof(newActions);
+        while (count < m_actionsCount) {
+            std::chrono::milliseconds sleepTime(650);
+            std::this_thread::sleep_for(sleepTime);
+            short tempRandomNumber = getRandomNumber(0, newTempActionsLen - 1);
+
+            if (actions[tempRandomNumber]) {
+                m_actions[count] = tempRandomNumber;
                 count++;
 
             }
         }
-        std::cout << "Сгенерированы действия" << std::endl;
-
-
+        std::cout << "Действия сгенерированы:" ;
+        for (short i = 0; i < sizeof(newActions) - 1; i++) {
+            std::cout << " "  << m_actions[i];
+        }
+        delete[] newActions;
     }
 };
 
-//	char getRandomAction() {
-		//return (int)result;
-//	}
-
-
 int main() {
-//    int tempMas[10] = {};
-//    tempMas[0] = 11;
-//    for (int i = 0; i < 10; i++){
-//        std::chrono::milliseconds sleepTime(750);
-//        std::this_thread::sleep_for(sleepTime);
-//        std::cout << getRandomNumber(1, 12) << std::endl;
-//    }
-//    return 0;
-//    SetConsoleOutputCP(CP_UTF8);
     setlocale(LC_ALL, "Rus");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 	//TODO добавить приветствие
+    //TODO проверка (!)ВСЕХ значений
 	int minNumber = 0;
 	int maxNumber = 15;
 	std::cout << "Первое число\n";
 //	std::cin >> minNumber;
     std::cout << "Второе число\n";
-//	std::cin >> maxNumber;
+    //	std::cin >> maxNumber;
 	// check min and max
-
 	/*bool add;
 	bool sub;
 	bool multi;
@@ -100,11 +105,7 @@ int main() {
     std::cout << "Количество примеров\n";
 //	std::cin >> examplesCount;
 	example test(actionsCount, minNumber, maxNumber, actions);
-	//std::string studentName; // Взять user name?
-//	system("pause");
-
+//	std::string studentName;
+    //TODO Взять user name?
     return 0;
-	for (int i = 0; i < examplesCount; i++) {
-
-	}
 }
