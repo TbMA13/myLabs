@@ -2,14 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <windows.h>
-#include <thread>
-#include <chrono>
+#include <numbersFunc.h>
 
-int getRandomNumber(const int minNumber, const int maxNumber) {
-    //TODO добавить каждый раз прошлый элемент ко времени
-    std::srand(time(NULL));
-    return (rand() % (maxNumber - minNumber + 1) + minNumber);
-}
 
 enum Actions{
   ADDITION = 0,
@@ -20,7 +14,7 @@ enum Actions{
 
 class example {
 private:
-    int m_actionsCount;
+    unsigned short m_actionsCount;
 
     int m_minNumber;
     int m_maxNumber;
@@ -28,14 +22,14 @@ private:
     int *m_numbersMas = nullptr;
     int *m_actions = nullptr;
 public:
-    example(int actionsCount, int minNumber, int maxNumber, const bool actions[4]) {
+    example(unsigned short actionsCount, int minNumber, int maxNumber, const bool actions[4]) {
         m_actionsCount = actionsCount;
         m_minNumber = minNumber;
         m_maxNumber = maxNumber;
         m_numbersMas = new int[m_actionsCount + 1];
         m_actions = new int[m_actionsCount];
-        //m_brackets = new short[m_actionsCount];
-        this->generate(actions);
+        this->actionsGenerate(actions);
+        this->numbersGenerate();
     }
 
     ~example() {
@@ -43,34 +37,69 @@ public:
         delete[] m_actions;
     }
 
-    void generate(const bool actions[4]) {
+    // изменяет массив m_actions, добавляя в него номера действий
+    void actionsGenerate(const bool actions[4]) {
         std::cout << "Генерация действий..." << std::endl;
         short count = 0;
-        short newTempActionsLen = actions[0] + actions[1] + actions[2] + actions[3];
-        short* newActions = new short[newTempActionsLen];
-        for (short i = 0; i < sizeof(actions); i++){
+        short newTempActionsLen = (short)actions[0] + (short)actions[1] + (short)actions[2] + (short)actions[3];
+
+        auto* newActions = new short[newTempActionsLen];
+        for (short i = 0; i < 4; i++){
             if (actions[i]) {
-                newActions[newTempActionsLen - sizeof(newActions)] = i;
-                newTempActionsLen += 1;
+                newActions[count] = i;
+                count++;
             }
         }
-        newTempActionsLen = sizeof(newActions);
+        count = 0;
         while (count < m_actionsCount) {
-            std::chrono::milliseconds sleepTime(650);
-            std::this_thread::sleep_for(sleepTime);
-            short tempRandomNumber = getRandomNumber(0, newTempActionsLen - 1);
+            // TODO что делать с рандомом???
+            short tempRandomIndex = numbers::getRandomNumber(0, newTempActionsLen - 1, count * (int)newActions);
 
-            if (actions[tempRandomNumber]) {
-                m_actions[count] = tempRandomNumber;
+            if (newActions[tempRandomIndex] <= 3 && newActions[tempRandomIndex] >= 0) {
+                m_actions[count] = newActions[tempRandomIndex];
                 count++;
 
             }
         }
         std::cout << "Действия сгенерированы:" ;
-        for (short i = 0; i < sizeof(newActions) - 1; i++) {
+        for (short i = 0; i < m_actionsCount ; i++) {
             std::cout << " "  << m_actions[i];
         }
+        std::cout << std::endl;
         delete[] newActions;
+    }
+
+    // изменяет массив m_numbersMas, добавляя в него числа
+    void numbersGenerate()
+    {
+        // сделать связь с прошлыми значениями
+        std::cout << "Вывод чисел: " << std::endl;
+        for (short i = 0; i < m_actionsCount; i++){
+            int &currentAction = m_actions[i];
+            int firstNumber = 0;
+            int secondNumber = 0;
+            if (currentAction == Actions::DIVISION) {
+                firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (int)&i);
+                secondNumber = numbers::getRandomDivider(firstNumber);
+                short count = 0;
+                while (!secondNumber && count < 5) {
+                    firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, count * (int)&firstNumber);
+                    secondNumber = numbers::getRandomDivider(firstNumber);
+                    count++;
+                }
+                if (!secondNumber){
+                    secondNumber = firstNumber;
+                }
+
+            }
+            else if (currentAction == Actions::MULTIPLICATION || currentAction == Actions::ADDITION || currentAction == Actions::SUBTRACTION){
+                firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i*(int)&m_minNumber*(int)&i);
+                secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i*(int)&m_maxNumber*(int)&i);
+            }
+            m_numbersMas[i] = firstNumber;
+            m_numbersMas[i + 1] = secondNumber;
+            std::cout << firstNumber << " " << secondNumber << std::endl;
+        }
     }
 };
 
@@ -78,10 +107,11 @@ int main() {
     setlocale(LC_ALL, "Rus");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
+//    SetConsoleCP(8); SetConsoleOutputCP(8);
 	//TODO добавить приветствие
     //TODO проверка (!)ВСЕХ значений
-	int minNumber = 0;
-	int maxNumber = 15;
+	int minNumber = -1000;
+	int maxNumber = 0;
 	std::cout << "Первое число\n";
 //	std::cin >> minNumber;
     std::cout << "Второе число\n";
@@ -98,7 +128,7 @@ int main() {
 //	std::cin >> actions[1];
 //	std::cin >> actions[2];
 //	std::cin >> actions[3];
-	int actionsCount = 3;
+	int actionsCount = 5;
     std::cout << "Количество действий\n";
 //	std::cin >> actionsCount;
 	int examplesCount = 3;
@@ -107,5 +137,6 @@ int main() {
 	example test(actionsCount, minNumber, maxNumber, actions);
 //	std::string studentName;
     //TODO Взять user name?
+    system("pause");
     return 0;
 }

@@ -27,9 +27,7 @@ public:
 
 void getComponents(std::vector<Component*> &components){
     std::cout << "\nЭлементы:" << std::endl;
-    std::cout << components.size() << std::endl;
     for (int i = 0; i < components.size(); i++){
-        std::cout << i << std::endl;
         std::cout << components[i]->getArticle() << std::endl;
     }
     std::cout << std::endl;
@@ -42,7 +40,6 @@ int main() {
 
     // создание структуры данных, состоящей из укзаталей на объекты класса Component
     std::vector<Component*> components;
-    //
 
 //    std::cout << "Размер вектора: " << components.size() << std::endl;
 //    std::cout << "Максимальный размер вектора " << components.capacity() << std::endl;
@@ -52,7 +49,6 @@ int main() {
     Component component1(1, 10, 10, 10);
     Component component2(2, 10, 10, 10);
     Component component3(3, 10, 10, 10);
-
     // добавление элементов в конец
     components.push_back((Component*)&component1);
     components.push_back((Component*)&component2);

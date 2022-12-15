@@ -35,6 +35,7 @@ public:
 	int getCount() {
 		return m_count;
 	}
+    
 	int getElement(int index){
 		if (index >= m_count) {
 			std::cout << "¬ведЄн некорректный индекс" << std::endl;
@@ -42,6 +43,7 @@ public:
 		}
 		return m_mas[index];
 	}
+
 	void getAllElements() {
 		for (int i = 0; i < m_count; i++) {
 			std::cout << m_mas[i] << " ";
