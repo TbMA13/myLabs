@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-int second()
+int main()
 {
     setlocale(LC_ALL, "");
     float A;

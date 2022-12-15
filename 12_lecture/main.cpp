@@ -10,9 +10,9 @@ enum class Colors {
 
 int main()
 {
-    std::cout << Colors::RED;
-//    Colors red = Colors::RED;
-//    std::cout << red;
+//    std::cout << Colors::RED;
+    Colors red = Colors::RED;
+    std::cout << (int)red;
     float t = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
     sf::CircleShape shape(100.f);
