@@ -6,9 +6,9 @@ private:
 
     int m_minNumber;
     int m_maxNumber;
-
-    int *m_numbersMas = nullptr;
-    int *m_actions = nullptr;
+    //TODO реализовать через вектор
+    int* m_numbersMas;
+    int* m_actions;
 public:
     example(unsigned short actionsCount, int minNumber, int maxNumber, const bool actions[4]);
 
@@ -19,4 +19,6 @@ public:
 
     // измен€ет массив m_numbersMas, добавл€€ в него числа
     void numbersGenerate();
+
+    void manyDivision();
 };
