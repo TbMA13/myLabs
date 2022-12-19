@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include <example.h>
 #include <numbersFunc.h>
@@ -19,12 +20,19 @@ example::example(unsigned short actionsCount, int minNumber, int maxNumber, cons
     m_numbersMas = new int[m_actionsCount + 1];
     m_actions = new int[m_actionsCount];
     this->actionsGenerate(actions);
+    this->othersNumbersGenerate();
+    for (int i = 0; i <= m_actionsCount; i++){
+        std::cout << m_numbersMas[i] << " ";
+    }
+    std::cout << std::endl;
     this->manyDivision();
     for (int i = 0; i <= m_actionsCount; i++){
         std::cout << m_numbersMas[i] << " ";
     }
     std::cout << std::endl;
-    //    this->numbersGenerate();
+    this->exampleBuild();
+    std::cout << this->getExample() << std::endl;
+
 }
 
 example::~example() {
@@ -65,31 +73,15 @@ void example::actionsGenerate(const bool actions[4]) {
 }
 
 // изменяет массив m_numbersMas, добавляя в него числа
-void example::numbersGenerate() {
+void example::othersNumbersGenerate() {
     // сделать связь с прошлыми значениями
     std::cout << "Вывод чисел: " << std::endl;
     for (unsigned short i = 0; i < m_actionsCount; i++){
         int &currentAction = m_actions[i];
         int firstNumber = 0;
         int secondNumber = 0;
-        if (currentAction == (int)Actions::DIVISION) {
-            firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * static_cast<int>(i));
-            secondNumber = numbers::getRandomDivider(firstNumber); // возвращает 0, если firstNumber = 0
-            short count = 0;
-            while (!secondNumber && count < 5) {
-                firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, count * (static_cast<int>(firstNumber)));
-                secondNumber = numbers::getRandomDivider(firstNumber);
-                count++;
-            }
-            if (!secondNumber){
-                secondNumber = firstNumber;
-            }
-
-        }
-        else if (static_cast<Actions>(currentAction) == Actions::MULTIPLICATION || static_cast<Actions>(currentAction) == Actions::ADDITION || static_cast<Actions>(currentAction) == Actions::SUBTRACTION){
-            firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_minNumber * i));
-            secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_maxNumber * i));
-        }
+        firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_minNumber * i));
+        secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_maxNumber * i));
         m_numbersMas[i] = firstNumber;
         m_numbersMas[i + 1] = secondNumber;
         std::cout << firstNumber << " " << secondNumber << std::endl;
@@ -97,6 +89,7 @@ void example::numbersGenerate() {
 
 }
 
+// изменяет массив m_numberMas, добавляя в него числа, которые участвуют в делении
 void example::manyDivision(){
     int tempIndex;
     int count = 0;
@@ -161,3 +154,58 @@ void example::manyDivision(){
         }
     }
 }
+
+// сборка готового примера в строку для вывода пользователю
+void example::exampleBuild(){
+    m_readyExample = "";
+    for (int i = 0; i < m_actionsCount; i++){
+        auto currentAction = static_cast<Actions>(m_actions[i]);
+//        if (currentAction == Actions::DIVISION && static_cast<Actions>(m_actions[i - 1]) != Actions::DIVISION) {
+//            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ' ';
+//        }
+//        else if (static_cast<Actions>(m_actions[i - 1]) == Actions::DIVISION && currentAction != Actions::DIVISION || currentAction == Actions::DIVISION && static_cast<Actions>(m_actions[i + 1]) != Actions::DIVISION /*|| i == m_actionsCount && static_cast<Actions>(m_actions[i + 1]) == Actions::DIVISION*/){
+//            m_readyExample += std::to_string(m_numbersMas[i]) + ')' + ' ';
+//        }
+//        else if (m_numbersMas[i] < 0){
+//            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ')' + ' ';
+//        }
+//        else {
+//            m_readyExample += std::to_string(m_numbersMas[i]) + ' ';
+//        }
+        if (static_cast<Actions>(m_actions[i - 1]) != Actions::DIVISION && currentAction == Actions::DIVISION){
+            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ' ';
+        }
+        else if (static_cast<Actions>(m_actions[i - 1]) == Actions::DIVISION && currentAction != Actions::DIVISION){
+            m_readyExample += std::to_string(m_numbersMas[i]) + ')' + ' ';
+        }
+        else {
+            m_readyExample += std::to_string(m_numbersMas[i]) + ' ';
+        }
+        switch (currentAction) {
+            case Actions::ADDITION:
+                m_readyExample += "+ ";
+                break;
+            case Actions::SUBTRACTION:
+                m_readyExample += "- ";
+                break;
+            case Actions::MULTIPLICATION:
+                m_readyExample += "* ";
+                break;
+            case Actions::DIVISION:
+                m_readyExample += "/ ";
+                break;
+        }
+    }
+    if (static_cast<Actions>(m_actions[m_actionsCount - 1]) == Actions::DIVISION){
+        m_readyExample += std::to_string(m_numbersMas[m_actionsCount]) + ')';
+    }
+    else{
+        m_readyExample += std::to_string(m_numbersMas[m_actionsCount]);
+    }
+}
+
+// геттер примера для вывода пользователю
+std::string example::getExample() {
+    return m_readyExample;
+}
+

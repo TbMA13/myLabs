@@ -10,7 +10,7 @@ namespace numbers {
     // нахождение случайного числа в диапазоне от minNumber до maxNumber
     int getRandomNumber(const int minNumber, const int maxNumber, int n) {
         std::this_thread::sleep_for(std::chrono::milliseconds(400));
-        std::srand(time(NULL) + n);
+        std::srand(time(NULL) + n * n);
         return (rand() % (maxNumber - minNumber + 1) + minNumber);
 
     }
