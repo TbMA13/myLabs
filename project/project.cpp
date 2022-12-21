@@ -41,7 +41,7 @@ int main() {
 //	std::cin >> actions[1];
 //	std::cin >> actions[2];
 //	std::cin >> actions[3];
-	int actionsCount = 7;
+	int actionsCount = 4;
     std::cout << "Количество действий: " << actionsCount << std::endl;
 //	std::cin >> actionsCount;
 	int examplesCount = 3;

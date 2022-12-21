@@ -19,19 +19,26 @@ example::example(unsigned short actionsCount, int minNumber, int maxNumber, cons
     m_maxNumber = maxNumber;
     m_numbersMas = new int[m_actionsCount + 1];
     m_actions = new int[m_actionsCount];
+    m_result = 0;
+
     this->actionsGenerate(actions);
     this->othersNumbersGenerate();
     for (int i = 0; i <= m_actionsCount; i++){
         std::cout << m_numbersMas[i] << " ";
     }
     std::cout << std::endl;
+
     this->manyDivision();
     for (int i = 0; i <= m_actionsCount; i++){
         std::cout << m_numbersMas[i] << " ";
     }
     std::cout << std::endl;
+
     this->exampleBuild();
     std::cout << this->getExample() << std::endl;
+
+    this->calcResult();
+    std::cout << this->getResult() << std::endl;
 
 }
 
@@ -110,8 +117,8 @@ void example::manyDivision(){
 
             //TODO сделать не более 10 раз проверку
             while (!flag){
-                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - 50: abs(m_minNumber) - 50, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), count + 100);
 
+                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), count + 100);
                 if (numbers::getRandomDivider(maxDivider) == maxDivider){
                     continue;
                 }
@@ -134,8 +141,8 @@ void example::manyDivision(){
                     dividerDividers.clear();
                 }
             }
-            for (int j = 0; j < dividerDividers.size(); j++){
-                std::cout << dividerDividers[j] << " ";
+            for (int dividerDivider : dividerDividers){
+                std::cout << dividerDivider << " ";
             }
             std::cout << std::endl;
             int difference = static_cast<int>(dividerDividers.size()) - count;
@@ -160,18 +167,6 @@ void example::exampleBuild(){
     m_readyExample = "";
     for (int i = 0; i < m_actionsCount; i++){
         auto currentAction = static_cast<Actions>(m_actions[i]);
-//        if (currentAction == Actions::DIVISION && static_cast<Actions>(m_actions[i - 1]) != Actions::DIVISION) {
-//            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ' ';
-//        }
-//        else if (static_cast<Actions>(m_actions[i - 1]) == Actions::DIVISION && currentAction != Actions::DIVISION || currentAction == Actions::DIVISION && static_cast<Actions>(m_actions[i + 1]) != Actions::DIVISION /*|| i == m_actionsCount && static_cast<Actions>(m_actions[i + 1]) == Actions::DIVISION*/){
-//            m_readyExample += std::to_string(m_numbersMas[i]) + ')' + ' ';
-//        }
-//        else if (m_numbersMas[i] < 0){
-//            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ')' + ' ';
-//        }
-//        else {
-//            m_readyExample += std::to_string(m_numbersMas[i]) + ' ';
-//        }
         if (static_cast<Actions>(m_actions[i - 1]) != Actions::DIVISION && currentAction == Actions::DIVISION){
             m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ' ';
         }
@@ -181,6 +176,8 @@ void example::exampleBuild(){
         else {
             m_readyExample += std::to_string(m_numbersMas[i]) + ' ';
         }
+        // добавляет действие
+        // / ; + ; - ; *
         switch (currentAction) {
             case Actions::ADDITION:
                 m_readyExample += "+ ";
@@ -207,5 +204,95 @@ void example::exampleBuild(){
 // геттер примера для вывода пользователю
 std::string example::getExample() {
     return m_readyExample;
+}
+
+// Вычисление результата
+void example::calcResult() {
+    Actions currentAction;
+
+    std::vector<Actions> newTempActions = {};
+    std::vector<int> newTempNumbers = {};
+    // Считает все действия деления и объединяет их в одно число. (190 / 5 / 2) ---> 19
+    for (int i = 0; i < m_actionsCount; i++){
+        currentAction = static_cast<Actions>(m_actions[i]);
+        switch (currentAction) {
+            case Actions::DIVISION:
+            {
+                int temp = m_numbersMas[i];
+                int count = 1;
+                for (int j = i; static_cast<Actions>(m_actions[j]) == Actions::DIVISION && j < m_actionsCount; j++){
+                    temp /= m_numbersMas[j + 1];
+                    count++;
+                }
+                newTempNumbers.push_back(temp);
+                if (i + count - 1 < m_actionsCount) {
+                    newTempActions.push_back(static_cast<Actions>(m_actions[i + count - 1]));
+                }
+                i += count - 1;
+                break;
+            }
+            default:
+                newTempActions.push_back(currentAction);
+                newTempNumbers.push_back(m_numbersMas[i]);
+                break;
+        }
+    }
+    newTempNumbers.push_back(m_numbersMas[m_actionsCount]);
+
+    std::vector<Actions> newActions = {};
+    std::vector<int> newNumbers = {};
+    // подсчёт всех умножений, и объединение каждого в одно число
+    for (int i = 0; i < newTempActions.size(); i++){
+        currentAction = newTempActions[i];
+        switch (currentAction) {
+            case Actions::MULTIPLICATION:
+            {
+                int temp = newTempNumbers[i];
+                int count = 1;
+
+                // !!!
+                for (int j = i; j < newTempActions.size() && newTempActions[j] == Actions::MULTIPLICATION; j++) {
+                    temp *= newTempNumbers[j + 1];
+                    count++;
+                }
+                newNumbers.push_back(temp);
+                if (i + count - 1 < newTempActions.size()){
+                    newActions.push_back(newTempActions[i + count - 1]);
+                }
+                i += count - 1;
+                break;
+            }
+            default:
+                newActions.push_back(currentAction);
+                newNumbers.push_back(newTempNumbers[i]);
+                break;
+        }
+    }
+    newNumbers.push_back(newTempNumbers[newTempNumbers.size() - 1]);
+
+    // итоговый подсчёт
+    m_result += newNumbers[0];
+    for (int i = 0; i < newActions.size(); i++){
+        currentAction = newActions[i];
+        switch (currentAction) {
+            case Actions::ADDITION:
+            {
+                m_result += newNumbers[i + 1];
+                break;
+            }
+            case Actions::SUBTRACTION:
+            {
+                m_result -= newNumbers[i + 1];
+                break;
+            }
+            default:
+                break;
+        }
+    }
+}
+
+// геттер результата
+int example::getResult() {
+    return m_result;
 }
 
