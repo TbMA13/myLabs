@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <thread>
 
 #include <example.h>
 #include <numbersFunc.h>
@@ -87,8 +88,8 @@ void example::othersNumbersGenerate() {
         int &currentAction = m_actions[i];
         int firstNumber = 0;
         int secondNumber = 0;
-        firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_minNumber * i));
-        secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * (m_maxNumber * i));
+        firstNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, i * ((int)&m_minNumber * i));
+        secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, (i + 1) * ((int)&m_maxNumber * (i + 1)));
         m_numbersMas[i] = firstNumber;
         m_numbersMas[i + 1] = secondNumber;
         std::cout << firstNumber << " " << secondNumber << std::endl;
@@ -117,8 +118,8 @@ void example::manyDivision(){
 
             //TODO сделать не более 10 раз проверку
             while (!flag){
-
-                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), count + 100);
+                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), count +1);
+                std::this_thread::sleep_for(std::chrono::milliseconds(400));
                 if (numbers::getRandomDivider(maxDivider) == maxDivider){
                     continue;
                 }
@@ -173,6 +174,9 @@ void example::exampleBuild(){
         else if (static_cast<Actions>(m_actions[i - 1]) == Actions::DIVISION && currentAction != Actions::DIVISION){
             m_readyExample += std::to_string(m_numbersMas[i]) + ')' + ' ';
         }
+        else if (m_numbersMas[i] < 0){
+            m_readyExample += '(' + std::to_string(m_numbersMas[i]) + ')' + ' ';
+        }
         else {
             m_readyExample += std::to_string(m_numbersMas[i]) + ' ';
         }
@@ -195,6 +199,9 @@ void example::exampleBuild(){
     }
     if (static_cast<Actions>(m_actions[m_actionsCount - 1]) == Actions::DIVISION){
         m_readyExample += std::to_string(m_numbersMas[m_actionsCount]) + ')';
+    }
+    else if (m_numbersMas[m_actionsCount] < 0){
+        m_readyExample += '(' + std::to_string(m_numbersMas[m_actionsCount]) + ')';
     }
     else{
         m_readyExample += std::to_string(m_numbersMas[m_actionsCount]);

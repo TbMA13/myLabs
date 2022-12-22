@@ -17,7 +17,7 @@ int main() {
 
     //TODO проверка (!)ВСЕХ значений
 
-	int minNumber = 0;
+	int minNumber = -1000;
 	int maxNumber = 1000;
 	std::cout << "Первое число: " << minNumber << std::endl;
 //	std::cin >> minNumber;
@@ -29,7 +29,7 @@ int main() {
 	bool multi;
 	bool division;*/
 	// хотя бы одно
-    bool actions[4] = {true, true, true, true};
+    bool actions[4] = {true, 0, 0, true};
     std::cout << "Выбор действий:";
 
     //TODO уточнить
@@ -41,7 +41,7 @@ int main() {
 //	std::cin >> actions[1];
 //	std::cin >> actions[2];
 //	std::cin >> actions[3];
-	int actionsCount = 4;
+	int actionsCount = 7;
     std::cout << "Количество действий: " << actionsCount << std::endl;
 //	std::cin >> actionsCount;
 	int examplesCount = 3;

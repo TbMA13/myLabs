@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <thread>
+
 
 #include <numbersFunc.h>
 
@@ -9,9 +9,14 @@ namespace numbers {
 
     // нахождение случайного числа в диапазоне от minNumber до maxNumber
     int getRandomNumber(const int minNumber, const int maxNumber, int n) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
-        std::srand(time(NULL) + n * n);
-        return (rand() % (maxNumber - minNumber + 1) + minNumber);
+        if (n % 2 == 0){
+            std::srand(time(NULL) + n * (n + 1000));
+            return (rand() % (maxNumber - minNumber + 1) + minNumber);
+        }
+        else{
+            std::srand(time(NULL) + n * n * (n + 1000));
+            return (rand() % (maxNumber - minNumber + 1) + minNumber);
+        }
 
     }
 
@@ -39,17 +44,18 @@ namespace numbers {
             }
         }
         if (getRandomNumber(0, 1, 1)){
-            if (number < 0 && getRandomNumber(0, 1, 1)){
-                return -dividers[getRandomNumber(0, (int)(dividers.size() - 1), (int)&number)];
+            if (number < 0 && getRandomNumber(0, 1, 2)){
+                return -dividers[getRandomNumber(0, (int)(dividers.size() - 1), number)];
             }
-            return dividers[getRandomNumber(0, (int)(dividers.size() - 1), (int)&dividers)];
+            return dividers[getRandomNumber(0, (int)(dividers.size() - 1), number)];
         }
         else{
-            if (number < 0 && getRandomNumber(0, 1, 1)){
-                return -number / dividers[getRandomNumber(0, (int)(dividers.size() - 1), (int)&number)];
+            if (number < 0 && getRandomNumber(0, 1, 3)){
+                return -number / dividers[getRandomNumber(0, (int)(dividers.size() - 1), number)];
             }
-            return number / dividers[getRandomNumber(0, (int)(dividers.size() - 1), (int)&dividers)];
+            return number / dividers[getRandomNumber(0, (int)(dividers.size() - 1), number)];
         }
+
         //TODO надо или он сам все чистит?
 //        dividers.clear();
 //        dividers.shrink_to_fit();
