@@ -29,7 +29,7 @@ int main() {
 	bool multi;
 	bool division;*/
 	// хотя бы одно
-    bool actions[4] = {true, 0, 0, true};
+    bool actions[4] = {true, true, true, true};
     std::cout << "Выбор действий:";
 
     //TODO уточнить

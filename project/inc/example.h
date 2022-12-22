@@ -12,7 +12,7 @@ private:
     int* m_actions;
 
     std::string m_readyExample;
-    int m_result;
+    long long m_result;
 public:
     example(unsigned short actionsCount, int minNumber, int maxNumber, const bool actions[4]);
 
@@ -37,5 +37,5 @@ public:
     void calcResult();
 
     // геттер результата
-    int getResult();
+    long long getResult();
 };

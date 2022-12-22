@@ -64,7 +64,7 @@ void example::actionsGenerate(const bool actions[4]) {
     count = 0;
     while (count < m_actionsCount) {
         // TODO что делать с рандомом???
-        int tempRandomIndex = numbers::getRandomNumber(0, newTempActionsLen - 1, count * static_cast<int>(newActions[count]));
+        int tempRandomIndex = numbers::getRandomNumber(0, newTempActionsLen - 1, count + 11);
 
         if (newActions[tempRandomIndex] <= static_cast<Actions>(3) && newActions[tempRandomIndex] >= static_cast<Actions>(0)) {
             m_actions[count] = static_cast<int>(newActions[tempRandomIndex]);
@@ -99,27 +99,31 @@ void example::othersNumbersGenerate() {
 
 // измен€ет массив m_numberMas, добавл€€ в него числа, которые участвуют в делении
 void example::manyDivision(){
+    int n = 11;
     int tempIndex;
     int count = 0;
     for (int i = 0; i <= m_actionsCount; i++){
         // если прошлыми действи€м было не деление и текущее - не деление
         if (!count && m_actions[i] != static_cast<int>(Actions::DIVISION)){
+            n *= 2;
             continue;
         }
         // если текущее действие - деление
         else if (m_actions[i] == static_cast<int>(Actions::DIVISION)){
+            n *= 3;
             tempIndex = i;
             count++;
         }
         // если прошлыми действи€м было деление и текущее - не деление
         else if (abs(m_actions[i]) > 3 && count || count && m_actions[i] != static_cast<int>(Actions::DIVISION)){
+            n *= 4;
             bool flag = false;
             std::vector<int> dividerDividers = {};
-
             //TODO сделать не более 10 раз проверку
             while (!flag){
-                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), count +1);
-                std::this_thread::sleep_for(std::chrono::milliseconds(400));
+                int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), n +1);
+//                std::this_thread::sleep_for(std::chrono::milliseconds(400));
+                n += 11;
                 if (numbers::getRandomDivider(maxDivider) == maxDivider){
                     continue;
                 }
@@ -245,19 +249,27 @@ void example::calcResult() {
         }
     }
     newTempNumbers.push_back(m_numbersMas[m_actionsCount]);
-
+    newTempNumbers.resize(newTempActions.size() + 1);
+    std::cout << "ѕервое деление" << std::endl;
+    for (auto it:newTempNumbers){
+        std::cout << it << " ";
+    }
+    std::cout << std::endl;
+    for (auto it:newTempActions){
+        std::cout << static_cast<int>(it) << " ";
+    }
+    std::cout << std::endl;
     std::vector<Actions> newActions = {};
-    std::vector<int> newNumbers = {};
+    std::vector<long long> newNumbers = {};
     // подсчЄт всех умножений, и объединение каждого в одно число
     for (int i = 0; i < newTempActions.size(); i++){
         currentAction = newTempActions[i];
         switch (currentAction) {
             case Actions::MULTIPLICATION:
             {
-                int temp = newTempNumbers[i];
+                long long temp = newTempNumbers[i];
                 int count = 1;
 
-                // !!!
                 for (int j = i; j < newTempActions.size() && newTempActions[j] == Actions::MULTIPLICATION; j++) {
                     temp *= newTempNumbers[j + 1];
                     count++;
@@ -276,7 +288,15 @@ void example::calcResult() {
         }
     }
     newNumbers.push_back(newTempNumbers[newTempNumbers.size() - 1]);
-
+    std::cout << "ѕервое умножение" << std::endl;
+    for (auto it:newNumbers){
+        std::cout << it << " ";
+    }
+    std::cout << std::endl;
+    for (auto it:newActions){
+        std::cout << static_cast<int>(it) << " ";
+    }
+    std::cout << std::endl;
     // итоговый подсчЄт
     m_result += newNumbers[0];
     for (int i = 0; i < newActions.size(); i++){
@@ -299,7 +319,7 @@ void example::calcResult() {
 }
 
 // геттер результата
-int example::getResult() {
+long long example::getResult() {
     return m_result;
 }
 
