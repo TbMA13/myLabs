@@ -4,6 +4,7 @@
 #include <example.h>
 
 
+
 int main() {
     setlocale(LC_ALL, "Rus");
     SetConsoleCP(1251);

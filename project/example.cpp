@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <thread>
 
 #include <example.h>
 #include <numbersFunc.h>
@@ -122,7 +121,6 @@ void example::manyDivision(){
             //TODO сделать не более 10 раз проверку
             while (!flag){
                 int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), n +1);
-//                std::this_thread::sleep_for(std::chrono::milliseconds(400));
                 n += 11;
                 if (numbers::getRandomDivider(maxDivider) == maxDivider){
                     continue;
