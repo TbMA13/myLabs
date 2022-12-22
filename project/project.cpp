@@ -1,10 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
-//#include <fstream>
-
-//#include <numbersFunc.h>
 #include <example.h>
+
 
 int main() {
     setlocale(LC_ALL, "Rus");

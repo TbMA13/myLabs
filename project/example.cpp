@@ -250,6 +250,8 @@ void example::calcResult() {
     }
     newTempNumbers.push_back(m_numbersMas[m_actionsCount]);
     newTempNumbers.resize(newTempActions.size() + 1);
+
+    // лог
     std::cout << "Первое деление" << std::endl;
     for (auto it:newTempNumbers){
         std::cout << it << " ";
@@ -259,6 +261,8 @@ void example::calcResult() {
         std::cout << static_cast<int>(it) << " ";
     }
     std::cout << std::endl;
+
+
     std::vector<Actions> newActions = {};
     std::vector<long long> newNumbers = {};
     // подсчёт всех умножений, и объединение каждого в одно число
@@ -288,6 +292,8 @@ void example::calcResult() {
         }
     }
     newNumbers.push_back(newTempNumbers[newTempNumbers.size() - 1]);
+
+    // лог
     std::cout << "Первое умножение" << std::endl;
     for (auto it:newNumbers){
         std::cout << it << " ";
@@ -297,6 +303,8 @@ void example::calcResult() {
         std::cout << static_cast<int>(it) << " ";
     }
     std::cout << std::endl;
+
+
     // итоговый подсчёт
     m_result += newNumbers[0];
     for (int i = 0; i < newActions.size(); i++){
