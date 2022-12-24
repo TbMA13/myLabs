@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+#include <logger.h>
 #include <example.h>
 #include <numbersFunc.h>
 
@@ -23,21 +24,24 @@ example::example(unsigned short actionsCount, int minNumber, int maxNumber, cons
 
     this->actionsGenerate(actions);
     this->othersNumbersGenerate();
-    for (int i = 0; i <= m_actionsCount; i++){
-        std::cout << m_numbersMas[i] << " ";
-    }
-    std::cout << std::endl;
 
     this->manyDivision();
+    logger::write("Текущие числа: "); logger::newLine();
     for (int i = 0; i <= m_actionsCount; i++){
-        std::cout << m_numbersMas[i] << " ";
+        logger::write(std::to_string(m_numbersMas[i]) + " ");
     }
-    std::cout << std::endl;
+    logger::newLine();
+
+    logger::write("Текущие действия: "); logger::newLine();
+    for (int i = 0; i < m_actionsCount; i++){
+        logger::write(std::to_string(m_actions[i]) + " ");
+    }
+    logger::newLine(); logger::newLine();
 
     this->exampleBuild();
-    std::cout << this->getExample() << std::endl;
 
     this->calcResult();
+    logger::write(m_readyExample + " = " + std::to_string(m_result));
     std::cout << this->getResult() << std::endl;
 
 }
@@ -49,7 +53,7 @@ example::~example() {
 
 // изменяет массив m_actions, добавляя в него номера действий
 void example::actionsGenerate(const bool actions[4]) {
-    std::cout << "Генерация действий..." << std::endl;
+    logger::write("Генерация действий..."); logger::newLine();
     short count = 0;
     int newTempActionsLen = (int)actions[0] + (int)actions[1] + (int)actions[2] + (int )actions[3];
 
@@ -62,7 +66,6 @@ void example::actionsGenerate(const bool actions[4]) {
     }
     count = 0;
     while (count < m_actionsCount) {
-        // TODO что делать с рандомом???
         int tempRandomIndex = numbers::getRandomNumber(0, newTempActionsLen - 1, count + 11);
 
         if (newActions[tempRandomIndex] <= static_cast<Actions>(3) && newActions[tempRandomIndex] >= static_cast<Actions>(0)) {
@@ -71,18 +74,18 @@ void example::actionsGenerate(const bool actions[4]) {
 
         }
     }
-    std::cout << "Действия сгенерированы:" ;
+    logger::write("Действия сгенерированы:");
     for (unsigned short i = 0; i < m_actionsCount ; i++) {
-        std::cout << " "  << m_actions[i];
+        logger::write(" " + std::to_string(m_actions[i]));
     }
-    std::cout << std::endl;
+    logger::newLine(); logger::newLine();
     delete[] newActions;
 }
 
 // изменяет массив m_numbersMas, добавляя в него числа
 void example::othersNumbersGenerate() {
     // сделать связь с прошлыми значениями
-    std::cout << "Вывод чисел: " << std::endl;
+    logger::write("Генерация всех чисел..."); logger::newLine();
     for (unsigned short i = 0; i < m_actionsCount; i++){
         int &currentAction = m_actions[i];
         int firstNumber = 0;
@@ -91,33 +94,37 @@ void example::othersNumbersGenerate() {
         secondNumber = numbers::getRandomNumber(m_minNumber, m_maxNumber, (i + 1) * ((int)&m_maxNumber * (i + 1)));
         m_numbersMas[i] = firstNumber;
         m_numbersMas[i + 1] = secondNumber;
-        std::cout << firstNumber << " " << secondNumber << std::endl;
+        logger::write(std::to_string(firstNumber) + " " + std::to_string(secondNumber)); logger::newLine();
     }
-
+    logger::newLine();
 }
 
 // изменяет массив m_numberMas, добавляя в него числа, которые участвуют в делении
 void example::manyDivision(){
+    logger::write("Генерация деления..."); logger::newLine();
     int n = 11;
     int tempIndex;
     int count = 0;
     for (int i = 0; i <= m_actionsCount; i++){
+
         // если прошлыми действиям было не деление и текущее - не деление
         if (!count && m_actions[i] != static_cast<int>(Actions::DIVISION)){
             n *= 2;
             continue;
         }
+
         // если текущее действие - деление
         else if (m_actions[i] == static_cast<int>(Actions::DIVISION)){
             n *= 3;
             tempIndex = i;
             count++;
         }
+
         // если прошлыми действиям было деление и текущее - не деление
         else if (abs(m_actions[i]) > 3 && count || count && m_actions[i] != static_cast<int>(Actions::DIVISION)){
             n *= 4;
             bool flag = false;
-            std::vector<int> dividerDividers = {};
+            std::vector<int> dividers = {};
             //TODO сделать не более 10 раз проверку
             while (!flag){
                 int maxDivider = numbers::getRandomNumber((abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber) - (m_maxNumber - m_minNumber) / 2: abs(m_minNumber) - (m_maxNumber - m_minNumber) / 2, (abs(m_maxNumber) > abs(m_minNumber))? abs(m_maxNumber): abs(m_minNumber), n +1);
@@ -126,40 +133,41 @@ void example::manyDivision(){
                     continue;
                 }
                 int tempMaxDivider = maxDivider;
-                dividerDividers.push_back(maxDivider);
-                std::cout << maxDivider << std::endl;
+                dividers.push_back(maxDivider);
+//                logger::write(std::to_string(maxDivider)); logger::newLine();
                 while (tempMaxDivider > 1){
                     for (int j = 2; j <= tempMaxDivider; j++){
                         if (tempMaxDivider % j == 0){
-                            dividerDividers.push_back(j);
+                            dividers.push_back(j);
                             tempMaxDivider /= j;
                             break;
                         }
                     }
                 }
-                if (dividerDividers.size() - 1>= count){
+                if (dividers.size() - 1 >= count){
                     flag = true;
                 }
                 else{
-                    dividerDividers.clear();
+                    dividers.clear();
                 }
             }
-            for (int dividerDivider : dividerDividers){
-                std::cout << dividerDivider << " ";
+            logger::write("Все делители:"); logger::newLine();
+            for (int dividerDivider : dividers){
+                logger::write(std::to_string(dividerDivider) + " ");
             }
-            std::cout << std::endl;
-            int difference = static_cast<int>(dividerDividers.size()) - count;
+            logger::newLine(); logger::newLine();
+            int difference = static_cast<int>(dividers.size()) - count;
             for (int j = 0; j < difference - 2; j++){
-                int tempSize = static_cast<int>(dividerDividers.size());
-                dividerDividers[numbers::getRandomNumber(1, tempSize - 2, tempSize)] *= dividerDividers[tempSize - 1];
-                dividerDividers.resize(tempSize - 1);
+                int tempSize = static_cast<int>(dividers.size());
+                dividers[numbers::getRandomNumber(1, tempSize - 2, tempSize)] *= dividers[tempSize - 1];
+                dividers.resize(tempSize - 1);
             }
-            std::cout << "Итог: ";
+            logger::write("Итог: ");
             for (int j = tempIndex - count, tempCount = 0; j <= tempIndex; j++, tempCount++){
-                m_numbersMas[j + 1] = dividerDividers[tempCount];
-                std::cout << m_numbersMas[j + 1] << " ";
+                m_numbersMas[j + 1] = dividers[tempCount];
+                logger::write(std::to_string(m_numbersMas[j + 1]) + " ");
             }
-            std::cout << std::endl;
+            logger::newLine(); logger::newLine();
             count = 0;
         }
     }
@@ -249,16 +257,18 @@ void example::calcResult() {
     newTempNumbers.push_back(m_numbersMas[m_actionsCount]);
     newTempNumbers.resize(newTempActions.size() + 1);
 
-    // лог
-    std::cout << "Первое деление" << std::endl;
+    logger::write("Объединение деления"); logger::newLine();
+    logger::write("Числа: ");
     for (auto it:newTempNumbers){
-        std::cout << it << " ";
+        logger::write(std::to_string(it) + " ");
     }
-    std::cout << std::endl;
+    logger::newLine();
+    logger::write("Действия: ");
     for (auto it:newTempActions){
-        std::cout << static_cast<int>(it) << " ";
+        logger::write(std::to_string(static_cast<int>(it)) + " ");
     }
-    std::cout << std::endl;
+    logger::newLine(); logger::newLine();
+
 
 
     std::vector<Actions> newActions = {};
@@ -290,18 +300,19 @@ void example::calcResult() {
         }
     }
     newNumbers.push_back(newTempNumbers[newTempNumbers.size() - 1]);
+    newNumbers.resize(newActions.size() + 1);
 
-    // лог
-    std::cout << "Первое умножение" << std::endl;
+    logger::write("Объединение умножения"); logger::newLine();
+    logger::write("Числа: ");
     for (auto it:newNumbers){
-        std::cout << it << " ";
+        logger::write(std::to_string(it) + " ");
     }
-    std::cout << std::endl;
+    logger::newLine();
+    logger::write("Действия: ");
     for (auto it:newActions){
-        std::cout << static_cast<int>(it) << " ";
+        logger::write(std::to_string(static_cast<int>(it)) + " ");
     }
-    std::cout << std::endl;
-
+    logger::newLine();
 
     // итоговый подсчёт
     m_result += newNumbers[0];

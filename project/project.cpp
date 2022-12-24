@@ -1,54 +1,45 @@
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
+#include <string>
 #include <example.h>
-
+#include <logger.h>
 
 
 int main() {
+    logger::setOutputFile("output.log");
     setlocale(LC_ALL, "Rus");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-    //TODO надо записать файл лога
-//    std::ofstream logFile;
-//    logFile.open("log.txt");
-	//TODO добавить приветствие
-
     //TODO проверка (!)ВСЕХ значений
+	int minNumber = -200;
+	int maxNumber = 200;
+    logger::write("Первое число: " + std::to_string(minNumber)); logger::newLine();
 
-	int minNumber = -1000;
-	int maxNumber = 1000;
-	std::cout << "Первое число: " << minNumber << std::endl;
-//	std::cin >> minNumber;
-    std::cout << "Второе число: " << maxNumber << std::endl;
-//    std::cin >> maxNumber;
-	// check min and max
-	/*bool add;
+    logger::write("Второе число: " + std::to_string(maxNumber)); logger::newLine();
+
+	/*
+    bool add;
 	bool sub;
 	bool multi;
-	bool division;*/
-	// хотя бы одно
+	bool division;
+	хотя бы одно */
     bool actions[4] = {true, true, true, true};
-    std::cout << "Выбор действий:";
-
+    logger::write("Выбор действий:");
     //TODO уточнить
     for (auto it : actions){
-        std::cout << " " << it;
+        logger::write(" " + std::to_string(static_cast<int>(it)));
     }
-    std::cout << std::endl;
-//	std::cin >> actions[0];
-//	std::cin >> actions[1];
-//	std::cin >> actions[2];
-//	std::cin >> actions[3];
+    logger::newLine();
+
 	int actionsCount = 7;
-    std::cout << "Количество действий: " << actionsCount << std::endl;
-//	std::cin >> actionsCount;
+    logger::write("Количество действий: " + std::to_string(actionsCount)); logger::newLine();
+
 	int examplesCount = 3;
-    std::cout << "Количество примеров: " << examplesCount << std::endl;
-//	std::cin >> examplesCount;
-    std::cout << std::endl;
-	example test(actionsCount, minNumber, maxNumber, actions);
-//	std::string studentName;
+    logger::write("Количество примеров: " + std::to_string(examplesCount)); logger::newLine(); logger::newLine();
+
+    example test(actionsCount, minNumber, maxNumber, actions);
+//    logger::write(test.getExample() + " =" + std::to_string(test.getResult()));
     system("pause");
     return 0;
 }

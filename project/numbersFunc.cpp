@@ -39,7 +39,7 @@ namespace numbers {
                 return number;
             }
             else {
-                std::cout << number << " - простое число!" << std::endl;
+//                std::cout << number << " - простое число!" << std::endl;
                 return number;
             }
         }
@@ -55,9 +55,5 @@ namespace numbers {
             }
             return number / dividers[getRandomNumber(0, (int)(dividers.size() - 1), number)];
         }
-
-        //TODO надо или он сам все чистит?
-//        dividers.clear();
-//        dividers.shrink_to_fit();
     }
 }
