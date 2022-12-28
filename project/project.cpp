@@ -39,7 +39,6 @@ int main() {
     logger::write("Количество примеров: " + std::to_string(examplesCount)); logger::newLine(); logger::newLine();
 
     example test(actionsCount, minNumber, maxNumber, actions);
-//    logger::write(test.getExample() + " =" + std::to_string(test.getResult()));
     system("pause");
     return 0;
 }

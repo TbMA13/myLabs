@@ -37,11 +37,11 @@ example::example(unsigned short actionsCount, int minNumber, int maxNumber, cons
         logger::write(std::to_string(m_actions[i]) + " ");
     }
     logger::newLine(); logger::newLine();
-
     this->exampleBuild();
-
+    std::cout << this->getExample() << std::endl;
     this->calcResult();
-    logger::write(m_readyExample + " = " + std::to_string(m_result));
+    logger::write(m_readyExample); logger::newLine();
+    logger::write(std::to_string(m_result)); logger::newLine();
     std::cout << this->getResult() << std::endl;
 
 }
@@ -226,7 +226,6 @@ std::string example::getExample() {
 // Вычисление результата
 void example::calcResult() {
     Actions currentAction;
-
     std::vector<Actions> newTempActions = {};
     std::vector<int> newTempNumbers = {};
     // Считает все действия деления и объединяет их в одно число. (190 / 5 / 2) ---> 19
@@ -313,7 +312,6 @@ void example::calcResult() {
         logger::write(std::to_string(static_cast<int>(it)) + " ");
     }
     logger::newLine();
-
     // итоговый подсчёт
     m_result += newNumbers[0];
     for (int i = 0; i < newActions.size(); i++){
